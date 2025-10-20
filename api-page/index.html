@@ -12,47 +12,28 @@
         :root {
             /* Variabel Warna (Light Mode) */
             --primary: #6366f1; --primary-dark: #4f46e5; --primary-light: #818cf8; --secondary: #f472b6;
-            
-            /* [MODIFIKASI 3] Latar semi-transparan untuk Light Mode */
             --dark: #f8fafc; --darker: #e2e8f0; --light: #0f172a; --gray: #475569;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444; /* Warna notif error */
             --success-bg: #dcfce7; --warning-bg: #fef3c7; --danger-bg: #fee2e2; /* Background notif */
             --success-text: #065f46; --warning-text: #92400e; --danger-text: #991b1b; /* Teks notif */
-            
-            --card-bg: rgba(255, 255, 255, 0.85); /* Semi-transparent */
-            --card-hover: rgba(255, 255, 255, 0.95); /* Semi-transparent */
-            --border-color: #e2e8f0;
-            
-            --input-bg: rgba(255, 255, 255, 0.7); /* Semi-transparent */
-            --input-border: #cbd5e1;
-            --input-focus-bg: rgba(255, 255, 255, 0.9); /* Semi-transparent */
-            --input-focus-border: var(--primary); 
-            --input-focus-shadow: rgba(99, 102, 241, 0.2);
-            
-            --pre-bg: rgba(241, 245, 249, 0.9); /* Semi-transparent */
-            --pre-border: #e2e8f0; 
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --card-bg: rgba(255, 255, 255, 0.9); /* Semi-transparent card */
+            --card-hover: #f8fafc; --border-color: #e2e8f0;
+            --input-bg: #ffffff; --input-border: #cbd5e1; --input-focus-bg: #ffffff; --input-focus-border: var(--primary); --input-focus-shadow: rgba(99, 102, 241, 0.2);
+            --pre-bg: #f1f5f9; --pre-border: #e2e8f0; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --header-height: 2.8rem;
         }
 
         body[data-theme="dark"] {
-            /* Variabel Warna (Dark Mode) - Ini menimpa :root */
-            --dark: #0f172a; --darker: #020617; --light: #f8fafc; --gray: #94a3b8;
+            /* Variabel Warna (Dark Mode) */
+            --dark: #000000; /* REQ 3: Latar belakang hitam pekat */
+            --darker: #000000; /* REQ 3: Latar belakang hitam pekat */
+            --light: #f8fafc; --gray: #94a3b8;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
             --success-bg: #052e16; --warning-bg: #422006; --danger-bg: #450a0a;
             --success-text: #6ee7b7; --warning-text: #fcd34d; --danger-text: #fca5a5;
-            
-            --card-bg: rgba(255, 255, 255, 0.05); /* Semi-transparent gelap */
-            --card-hover: rgba(255, 255, 255, 0.08); /* Semi-transparent gelap */
-            --border-color: rgba(255, 255, 255, 0.1);
-            
-            --input-bg: rgba(255, 255, 255, 0.05); /* Semi-transparent gelap */
-            --input-border: rgba(255, 255, 255, 0.2); 
-            --input-focus-bg: rgba(255, 255, 255, 0.1); 
-            --input-focus-border: var(--primary-light);
-            
-            --pre-bg: rgba(0, 0, 0, 0.3); /* Semi-transparent gelap */
-            --pre-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.05); --card-hover: rgba(255, 255, 255, 0.08); --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.05); --input-border: rgba(255, 255, 255, 0.2); --input-focus-bg: rgba(255, 255, 255, 0.1); --input-focus-border: var(--primary-light); --input-focus-shadow: rgba(99, 102, 241, 0.2);
+            --pre-bg: rgba(0, 0, 0, 0.3); --pre-border: rgba(255, 255, 255, 0.1);
         }
 
         html { scroll-behavior: smooth; }
@@ -60,87 +41,70 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            
-            /* [MODIFIKASI 3] Pengaturan background default (Dark mode) */
-            background-color: var(--darker);
-            background-image: linear-gradient(135deg, var(--darker), var(--dark));
+            /* REQ 3: Background logic */
+            background-image: url('/images/background.jpg'); /* GANTI GAMBAR INI */
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* Penting agar background tidak ikut scroll */
-            
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: var(--light);
             padding: calc(var(--header-height) + 1rem) 1rem 1rem 1rem; min-height: 100vh;
-            -webkit-tap-highlight-color: transparent; line-height: 1.5; 
+            -webkit-tap-highlight-color: transparent; line-height: 1.5;
             transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
-
-        /* [MODIFIKASI 3] Override background untuk Light Mode */
-        body[data-theme="light"] {
-            /* GANTI URL FOTO ANDA DI SINI */
-            background-image: url('/images/background-light.jpg');
-            background-color: #f0f0f0; /* Warna fallback jika foto gagal dimuat */
+        
+        /* REQ 3: Overlay untuk mode terang agar teks terbaca */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(255, 255, 255, 0.7); /* Overlay putih transparan */
+            z-index: -1;
+            transition: background-color 0.3s ease;
         }
-
+        
+        /* REQ 3: Hapus overlay & gambar di dark mode */
+        body[data-theme="dark"] {
+            background-image: none;
+            background: linear-gradient(135deg, var(--darker), var(--dark)); /* Latar belakang hitam */
+        }
+        body[data-theme="dark"]::before {
+            background-color: rgba(0, 0, 0, 0);
+        }
 
         .d-none { display: none !important; }
 
-        pre, #apiResponseContent { 
-            white-space: pre-wrap; word-wrap: break-word; overflow-x: auto; 
-            background: var(--pre-bg); color: var(--light); 
-            padding: 1rem; border-radius: 8px; max-height: 400px; 
-            font-size: 0.85rem; 
-            font-family: 'Consolas', 'Menlo', 'Courier New', monospace; 
-            border: 1px solid var(--pre-border); 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-            /* [MODIFIKASI 2] Font semi-tebal */
-            font-weight: 500;
+        /* REQ 2: Syntax Highlighting & Font Tebal */
+        pre, #apiResponseContent {
+            white-space: pre-wrap; word-wrap: break-word; overflow-x: auto;
+            background: var(--pre-bg); color: var(--light); padding: 1rem;
+            border-radius: 8px; max-height: 400px; font-size: 0.875rem; /* Sedikit lebih besar */
+            font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+            border: 1px solid var(--pre-border); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 500; /* REQ 2: Font aga tebalkan */
+            line-height: 1.6;
         }
-        
-        /* [MODIFIKASI 2] CSS untuk Syntax Highlighting */
-        #apiResponseContent .json-key { color: var(--primary-light); }
-        #apiResponseContent .json-string { color: var(--success); }
-        #apiResponseContent .json-number { color: var(--warning); }
-        #apiResponseContent .json-boolean { color: var(--secondary); }
-        #apiResponseContent .json-null { color: var(--gray); }
-        /* Warna highlight berbeda untuk light mode agar lebih jelas */
-        body[data-theme="light"] #apiResponseContent .json-key { color: var(--primary-dark); }
-        body[data-theme="light"] #apiResponseContent .json-string { color: #059669; }
-        body[data-theme="light"] #apiResponseContent .json-number { color: #d97706; }
-        body[data-theme="light"] #apiResponseContent .json-boolean { color: #db2777; }
-
+        /* REQ 2: JSON Syntax Highlighting Colors */
+        .json-key { color: #c991e1; /* Ungu/Pink */ font-weight: 600; }
+        .json-string { color: #86c166; /* Hijau */ }
+        .json-number { color: #f59e0b; /* Oranye */ }
+        .json-boolean { color: #6366f1; /* Biru/Primary */ font-weight: 600; }
+        .json-null { color: var(--gray); font-style: italic; }
 
         /* Form Styles */
         .modal-body form label { display: block; font-weight: 500; margin-bottom: 6px; color: var(--gray); font-size: 0.9rem; }
-        .modal-body form input { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--light); margin-bottom: 1rem; font-size: 0.95rem; font-family: inherit; transition: var(--transition); }
-        .modal-body form input::placeholder { color: var(--gray); opacity: 0.7; }
-        .modal-body form input:focus { outline: none; border-color: var(--input-focus-border); background: var(--input-focus-bg); box-shadow: 0 0 0 3px var(--input-focus-shadow); }
+        .modal-body form input, .modal-body form textarea { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--light); margin-bottom: 1rem; font-size: 0.95rem; font-family: inherit; transition: var(--transition); }
+        .modal-body form textarea { min-height: 100px; resize: vertical; }
+        .modal-body form input::placeholder, .modal-body form textarea::placeholder { color: var(--gray); opacity: 0.7; }
+        .modal-body form input:focus, .modal-body form textarea:focus { outline: none; border-color: var(--input-focus-border); background: var(--input-focus-bg); box-shadow: 0 0 0 3px var(--input-focus-shadow); }
         
-        /* [MODIFIKASI 5] Style untuk Textarea */
-        .modal-body form textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-            background: var(--input-bg);
-            color: var(--light);
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: var(--transition);
-            resize: vertical;
-            min-height: 100px;
-        }
-        .modal-body form textarea::placeholder { color: var(--gray); opacity: 0.7; }
-        .modal-body form textarea:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            background: var(--input-focus-bg);
-            box-shadow: 0 0 0 3px var(--input-focus-shadow);
-        }
-
-        #submitParamBtn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 12px 24px; font-size: 0.95rem; border-radius: 8px; font-family: inherit; cursor: pointer; font-weight: 500; transition: var(--transition); width: 100%; margin-top: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        #submitParamBtn:hover { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
-        #submitParamBtn:active { transform: translateY(0); }
+        #submitParamBtn, #submitReportBtn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 12px 24px; font-size: 0.95rem; border-radius: 8px; font-family: inherit; cursor: pointer; font-weight: 500; transition: var(--transition); width: 100%; margin-top: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        #submitParamBtn:hover, #submitReportBtn:hover { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
+        #submitParamBtn:active, #submitReportBtn:active { transform: translateY(0); }
+        
         .loading-spinner { margin: 1rem auto; border: 3px solid var(--card-bg); border-top: 3px solid var(--primary-light); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -175,18 +139,20 @@
         @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .hero p { font-size: 1.1rem; color: var(--gray); margin-bottom: 1.5rem; line-height: 1.6; }
 
-        /* [MODIFIKASI 1] Label Versi */
+        /* REQ 1: Version Label */
         .version-label {
-            font-size: 1rem; /* Lebih kecil dari h2 */
+            font-size: 0.8rem;
             font-weight: 500;
             color: var(--primary);
-            vertical-align: middle;
-            margin-left: 0.5rem;
-            background: var(--card-hover); /* Background halus */
-            padding: 0.2em 0.5em;
+            background-color: var(--card-bg);
+            padding: 3px 8px;
             border-radius: 6px;
-            display: inline-block;
-            line-height: 1;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            border: 1px solid var(--border-color);
+        }
+        body[data-theme="dark"] .version-label {
+             color: var(--primary-light);
         }
 
         /* Scrolling Text (Sticky Header) */
@@ -219,14 +185,41 @@
         .products-section { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem; text-align: center; margin-left: 1rem; margin-right: 1rem; }
         .products-section h2 { font-size: 1.5rem; font-weight: 600; color: var(--light); margin-bottom: 0.5rem; }
         .products-section p { color: var(--gray); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        /* [MODIFIKASI 5] Wrapper untuk tombol produk */
-        .product-buttons-container {
+        /* REQ 5: Button group for products */
+        .product-buttons {
             display: flex;
-            flex-wrap: wrap; /* Agar tombol turun ke bawah di layar kecil */
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
-        .products-section .play-button { text-decoration: none; align-self: center; margin-top: 0; display: inline-flex; justify-content: center; }
+        .products-section .play-button {
+            text-decoration: none; align-self: center; margin-top: 0;
+            display: inline-flex; justify-content: center;
+            flex-grow: 1; /* Allow buttons to grow */
+            min-width: 150px; /* Minimum width */
+        }
+        /* REQ 5: Style new buttons */
+        .play-button.btn-secondary {
+            background: var(--card-hover);
+            color: var(--primary);
+            border: 1px solid var(--primary-light);
+            box-shadow: none;
+        }
+        .play-button.btn-secondary:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+        body[data-theme="dark"] .play-button.btn-secondary {
+            color: var(--primary-light);
+            border-color: var(--primary);
+        }
+         body[data-theme="dark"] .play-button.btn-secondary:hover {
+             background: var(--primary);
+             color: white;
+         }
+
 
         /* Stats */
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; padding: 0 1rem; }
@@ -249,48 +242,31 @@
         .api-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
         .api-card { background: var(--card-bg); padding: 1.25rem; border-radius: 12px; transition: var(--transition); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; }
         .api-card:hover { transform: translateY(-5px); background: var(--card-hover); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); border-color: var(--border-color); }
-        .api-info h3 { font-size: 1.2rem; color: var(--light); font-weight: 600; margin-bottom: 0.5rem; }
-        .api-info p { font-size: 0.95rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.5; }
-        
-        /* [MODIFIKASI 4] Label "NEW" */
-        .new-badge {
-            background-color: var(--secondary);
+        .api-info h3 { font-size: 1.2rem; color: var(--light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+        /* REQ 4: New Label */
+        .api-info h3 .new-label {
+            background-color: var(--danger);
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            padding: 0.2em 0.5em;
-            border-radius: 4px;
-            margin-left: 0.5rem;
-            vertical-align: middle;
-            text-transform: uppercase;
-            display: inline-block;
-            line-height: 1;
-            animation: pulse-badge 1.5s infinite;
+            padding: 3px 8px;
+            border-radius: 10px;
+            animation: pulse-danger 1.5s infinite;
         }
-        @keyframes pulse-badge {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.9; }
-        }
+        @keyframes pulse-danger { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
 
-        /* [MODIFIKASI 6] Status Endpoint */
-        .status { 
-            background: rgba(16, 185, 129, 0.15); 
-            padding: 0.35rem 0.75rem; 
-            border-radius: 20px; 
-            font-size: 0.75rem; 
-            color: var(--success); 
-            display: inline-block; 
-            font-weight: 500; 
-            margin-top: 0.5rem; 
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            transition: var(--transition); /* Animasi saat ganti status */
-        }
+        .api-info p { font-size: 0.95rem; color: var(--gray); margin-bottom: 1rem; line-height: 1.5; }
+        /* REQ 6: Status Label */
+        .status { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; display: inline-block; font-weight: 500; margin-top: 0.5rem; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        /* Default Active */
+        .status { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
         .status.warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); border-color: rgba(245, 158, 11, 0.3); }
-        .status.danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+        .status.danger, .status.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+        
         body[data-theme="light"] .status { border: 1px solid transparent; }
         body[data-theme="light"] .status.warning { border: 1px solid transparent; }
-        body[data-theme="light"] .status.danger { border: 1px solid transparent; }
-        
+        body[data-theme="light"] .status.danger, body[data-theme="light"] .status.error { border: 1px solid transparent; }
+
         .play-button { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 8px; padding: 0.75rem 1.5rem; color: white; cursor: pointer; font-size: 0.95rem; font-weight: 500; text-align: center; transition: var(--transition); align-self: flex-start; margin-top: 1rem; display: flex; align-items: center; gap: 8px; font-family: inherit; }
         .play-button:hover { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
         .play-button:active { transform: translateY(0); }
@@ -347,6 +323,7 @@
             .scrolling-text { font-size: 1rem; }
             .api-list { grid-template-columns: 1fr; }
             .products-section, .stats, .content, .footer { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .product-buttons { flex-direction: column; } /* REQ 5: Stack buttons on mobile */
             #musicFabContainer { bottom: 1rem; right: 1rem; }
             #musicControlsExpanded { right: 0; }
         }
@@ -377,17 +354,18 @@
         <section class="products-section fade-in" style="animation-delay: 0.2s;">
             <h2>Jelajahi Produk Kami</h2>
             <p>Butuh script, layanan digital, atau produk premium lainnya? Kunjungi toko kami untuk melihat semua penawaran terbaik. Dapatkan solusi yang Anda butuhkan hari ini!</p>
-            
-            <div class="product-buttons-container">
+            <div class="product-buttons">
                 <a href="https://toko.rikishop.my.id" target="_blank" rel="noopener noreferrer" class="play-button">
                     <i class="fa-solid fa-store"></i>
                     Kunjungi Toko
                 </a>
-                <button class="play-button" data-report-type="Lapor Error" style="background: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger);">
-                    <i class="fa-solid fa-bug"></i> Lapor Error
+                <button id="reportErrorBtn" class="play-button btn-secondary">
+                    <i class="fa-solid fa-bug"></i>
+                    Lapor Error
                 </button>
-                <button class="play-button" data-report-type="Request Fitur" style="background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning);">
-                    <i class="fa-solid fa-lightbulb"></i> Request Fitur
+                <button id="requestFeatureBtn" class="play-button btn-secondary">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Request Fitur
                 </button>
             </div>
         </section>
@@ -413,7 +391,30 @@
                 <button id="submitParamBtn" type="button">Submit Request</button>
                 <div id="apiResponseLoading" class="loading-spinner" style="display: none;"></div>
                 <button id="copyResponseBtn" class="copy-button d-none"><i class="far fa-copy"></i> Copy Response</button>
-                <div id="apiResponseContent" class="d-none" style="white-space: pre-wrap; word-wrap: break-word; overflow-x: auto; background: var(--pre-bg); color: var(--light); padding: 1rem; border-radius: 8px; max-height: 400px; font-size: 0.85rem; font-family: 'Consolas', 'Menlo', 'Courier New', monospace; border: 1px solid var(--pre-border); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); font-weight: 500;"></div>
+                <pre id="apiResponseContent" class="d-none"></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="reportModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div><h5 id="reportModalTitle">Lapor Error</h5><span>Kirimkan laporan Anda ke NGL</span></div>
+                <button class="btn-close report-close">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="reportForm">
+                    <input type="hidden" id="reportType" value="Lapor Error">
+                    <label for="reportName">Nama Anda</label>
+                    <input type="text" id="reportName" name="nama" placeholder="Masukkan nama Anda..." required>
+                    
+                    <label for="reportText">Isi Teks Laporan</label>
+                    <textarea id="reportText" name="teks" placeholder="Jelaskan error atau fitur yang Anda inginkan..." required></textarea>
+                    
+                    <button id="submitReportBtn" type="submit">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Laporan
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -436,29 +437,6 @@
             </div>
         </div>
     </div>
-
-    <div class="modal" id="reportModal">
-         <div class="modal-dialog">
-            <div class="modal-header">
-                <div><h5 id="reportModalTitle"></h5><span>Sampaikan masukanmu</span></div>
-                <button class="btn-close" data-close-modal="reportModal">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="reportForm">
-                    <input type="hidden" id="reportType" value="">
-                    <label for="reportName">Nama</label>
-                    <input type="text" id="reportName" name="reportName" placeholder="Nama kamu..." required />
-                    <label for="reportText">Pesan</label>
-                    <textarea id="reportText" name="reportText" rows="4" placeholder="Tulis pesanmu di sini..." required></textarea>
-                    <button id="submitReportBtn" type="submit" class="play-button" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
-                        Kirim Pesan
-                    </button>
-                </form>
-                <div id="reportLoading" class="loading-spinner" style="display: none;"></div>
-            </div>
-        </div>
-    </div>
-
 
     <div id="qrLightbox" class="qr-lightbox-overlay">
         <img src="" alt="Zoomed QR Code" id="lightboxImage">
@@ -486,65 +464,147 @@
     </footer>
 
     <script>
-        // [MODIFIKASI 2] Fungsi Syntax Highlighting
-        function syntaxHighlight(json) {
+        // --- REQ 5: NGL Configuration ---
+        // **PERBAIKAN: Ganti ke API proxy Anda**
+        const nglProxyUrl = "https://api.deline.my.id/api/tools/ngl?link=https://ngl.link/rikishop";
+        
+        // --- REQ 6: Global Status Variable ---
+        let endpointStatuses = {};
+        
+        // --- REQ 2: JSON Syntax Highlighter ---
+        function highlightJSON(json) {
             if (typeof json != 'string') {
-                 json = JSON.stringify(json, undefined, 2); // 2 spasi indentasi
+                 json = JSON.stringify(json, undefined, 2);
             }
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                let cls = 'json-number';
+                let cls = 'json-number'; // Default: angka
                 if (/^"/.test(match)) {
                     if (/:$/.test(match)) {
-                        cls = 'json-key';
+                        cls = 'json-key'; // Key
                     } else {
-                        cls = 'json-string';
+                        cls = 'json-string'; // String
                     }
                 } else if (/true|false/.test(match)) {
-                    cls = 'json-boolean';
+                    cls = 'json-boolean'; // Boolean
                 } else if (/null/.test(match)) {
-                    cls = 'json-null';
+                    cls = 'json-null'; // Null
                 }
                 return '<span class="' + cls + '">' + match + '</span>';
             });
         }
         
-        // [MODIFIKASI 6] Fungsi Cek Status Endpoint Real-time
-        async function checkEndpointStatus(api, cardElement) {
-            // Hanya cek endpoint yang status awalnya 'Active'
-            if (!api.status || api.status.toLowerCase() !== 'active') return; 
-    
-            const statusEl = cardElement.querySelector('.status');
-            if (!statusEl) return;
-    
-            // Ambil base path (sebelum tanda '?')
-            const urlToCheck = api.path.split('?')[0];
-    
-            // Endpoint khusus yang tidak bisa di-ping (seperti /api/status itu sendiri atau endpoint root)
-            if (urlToCheck === '/api/status' || urlToCheck === '/') return; 
-    
-            try {
-                const response = await fetch(urlToCheck, { 
-                    method: 'GET',
-                    signal: AbortSignal.timeout(5000) // Timeout 5 detik
-                });
-    
-                // Jika server error (5xx), tandai sebagai Error
-                if (!response.ok && response.status >= 500) { 
-                    throw new Error(`Server Error: ${response.status}`);
+        // --- Notification Function ---
+        let notificationTimeout;
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+            clearTimeout(notificationTimeout);
+            notification.textContent = message;
+            notification.className = 'notification'; // Reset class
+            if (type) notification.classList.add(type); // Add type class
+            notification.classList.add('show');
+            notificationTimeout = setTimeout(() => { notification.classList.remove('show'); }, 3000);
+        }
+
+        // --- PERBAIKAN: Fungsi Copy-to-Clipboard dengan Fallback ---
+        function copyToClipboard(textToCopy, buttonElement, successMessage = "Copied!", isCopyUrl = false) {
+            const originalIconHtml = isCopyUrl ? '<i class="far fa-copy"></i> Copy URL' : '<i class="far fa-copy"></i> Copy Response';
+            
+            const showFeedback = (success) => {
+                if (success) {
+                    buttonElement.innerHTML = `<i class="fas fa-check"></i> ${successMessage}`;
+                    showNotification(successMessage, 'success');
+                } else {
+                    buttonElement.innerHTML = `<i class="fas fa-times"></i> Copy Failed`;
+                    showNotification("Gagal menyalin!", 'error');
                 }
+                setTimeout(() => { buttonElement.innerHTML = originalIconHtml; }, 2000);
+            };
+
+            // Try modern API (HTTPS)
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => showFeedback(true))
+                    .catch(err => {
+                        console.error("Modern copy failed, trying fallback:", err);
+                        fallback(); // Coba fallback
+                    });
+            } else {
+                // Fallback untuk HTTP
+                console.warn("Using fallback copy method (HTTP or unsupported).");
+                fallback();
+            }
+            
+            function fallback() {
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    // Styling agar tidak terlihat
+                    textArea.style.position = "fixed";
+                    textArea.style.top = "-9999px";
+                    textArea.style.left = "-9999px";
+                    textArea.style.width = "1px";
+                    textArea.style.height = "1px";
+                    textArea.style.opacity = "0";
+
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    if (successful) {
+                        showFeedback(true);
+                    } else {
+                        throw new Error("execCommand returned false");
+                    }
+                } catch (err) {
+                    console.error("Fallback copy failed:", err);
+                    showFeedback(false);
+                }
+            }
+        }
+        
+        // --- REQ 6: Function to update status from backend ---
+        async function updateStatuses() {
+            try {
+                const response = await fetch('/api/endpoint-status');
+                if (!response.ok) return;
                 
-                // Jika 400-499 (client error, misal: 'apikey missing'), anggap 'Active'
-                // Jika 200-299 (ok), anggap 'Active'.
-                
+                const statusData = await response.json();
+                if (statusData && statusData.data) {
+                    endpointStatuses = statusData.data;
+                    
+                    // Update UI
+                    for (const path in endpointStatuses) {
+                        const status = endpointStatuses[path];
+                        const span = document.querySelector(`.status[data-path="${path}"]`);
+                        
+                        if (span && span.textContent !== status) {
+                            span.textContent = status;
+                            span.className = 'status'; // Reset class
+                            
+                            if (status.toLowerCase().includes("error") || status.toLowerCase().includes("danger")) {
+                                span.classList.add('danger');
+                            } else if (status.toLowerCase().includes("warning") || status.toLowerCase().includes("beta")) {
+                                span.classList.add('warning');
+                            }
+                            // 'Active' (default) tidak perlu kelas tambahan
+                        }
+                    }
+                }
             } catch (error) {
-                // Jika fetch gagal (network error, timeout, CORS, atau server 5xx)
-                console.warn(`Endpoint check failed for ${urlToCheck}:`, error.message);
-                statusEl.textContent = 'Error';
-                statusEl.className = 'status danger'; // Ganti kelas jadi merah
+                console.warn("Could not poll endpoint status:", error);
             }
         }
 
+        // --- REQ 6: Function to start polling ---
+        function startStatusPolling() {
+            updateStatuses(); // Panggil sekali saat load
+            setInterval(updateStatuses, 30000); // Poll setiap 30 detik
+        }
 
         async function loadSettings() {
             // --- Theme Switcher Logic ---
@@ -650,13 +710,15 @@
             let currentEndpointRequiresApiKey = false;
             const settings = await fetch("/settings.json").then(res => res.json());
             const apis = settings.endpoints;
+            
+            // REQ 1: Set Title dengan Versi
+            const apiTitleEl = document.getElementById("apiTitle");
+            if (apiTitleEl) apiTitleEl.innerHTML = `${settings.apititle || ""} <span class="version-label">v1.1.1</span>`;
+            
             const setContent = (id, property, value) => { const el = document.getElementById(id); if (el) el[property] = value; };
             setContent("page", "textContent", settings.pagetitle || "");
             setContent("credits", "textContent", `© ${new Date().getFullYear()} Powered by ${settings.creator || ""}`);
-            
-            // [MODIFIKASI 1] Set Judul dengan Versi
-            setContent("apiTitle", "innerHTML", `${settings.apititle || ""} <span class="version-label">v1.1.1</span>`);
-            
+            // setContent("apiTitle", "textContent", settings.apititle || ""); // Diganti oleh REQ 1
             document.getElementById("githubLink").href = settings.github || "#";
             document.getElementById("whatsappLink").href = settings.whatsapp || "#";
             document.getElementById("youtubeLink").href = settings.youtube || "#";
@@ -671,155 +733,62 @@
                     const card = document.createElement("div"); 
                     card.className = "api-card fade-in"; 
                     card.style.animationDelay = `${i * 0.1}s`; 
-                    let sC = ""; 
-                    if (api.status.toLowerCase().includes("maintenance")) sC = "danger"; 
-                    else if (api.status.toLowerCase().includes("beta")) sC = "warning"; 
                     
-                    // [MODIFIKASI 4] Cek Label "NEW"
-                    let newBadge = '';
+                    // REQ 4: Cek Label "NEW"
+                    let isNew = false;
                     if (api.dateAdded) {
-                        const addedDate = new Date(api.dateAdded);
-                        const now = new Date();
-                        const diffHours = (now - addedDate) / (1000 * 60 * 60);
-                        if (diffHours >= 0 && diffHours <= 24) { // Cek jika dalam 24 jam terakhir
-                            newBadge = '<span class="new-badge">NEW</span>';
-                        }
+                        try {
+                            const addedDate = new Date(api.dateAdded);
+                            const now = new Date();
+                            const diffMs = now.getTime() - addedDate.getTime();
+                            const diffHours = diffMs / (1000 * 60 * 60);
+                            if (diffHours <= 24) {
+                                isNew = true;
+                            }
+                        } catch (e) { console.warn("Invalid dateAdded format:", api.dateAdded); }
                     }
-
-                    card.innerHTML = ` <div class="api-info"> 
-                                          <h3>${api.name} ${newBadge}</h3> <p>${api.desc}</p> 
-                                          <span class="status ${sC}">${api.status}</span> 
-                                       </div> 
-                                       <button class="play-button" data-endpoint="${api.path}" data-api="${api.name}" data-desc="${api.desc}"> 
-                                          <i class="fa-solid fa-play"></i> Try it now 
-                                       </button> `; 
-                    apiList.appendChild(card); 
+                    const newLabelHtml = isNew ? '<span class="new-label">NEW</span>' : '';
                     
-                    // [MODIFIKASI 6] Panggil fungsi cek status real-time
-                    checkEndpointStatus(api, card);
+                    // REQ 6: Cek Status Real-time
+                    const basePath = api.path.split('?')[0];
+                    const liveStatus = endpointStatuses[basePath] || api.status || 'Active';
+                    let sC = ""; 
+                    if (liveStatus.toLowerCase().includes("error") || liveStatus.toLowerCase().includes("danger")) sC = "danger"; 
+                    else if (liveStatus.toLowerCase().includes("warning") || liveStatus.toLowerCase().includes("beta")) sC = "warning"; 
+                    
+                    card.innerHTML = ` 
+                        <div class="api-info"> 
+                            <h3>${api.name} ${newLabelHtml}</h3> 
+                            <p>${api.desc}</p> 
+                            <span class="status ${sC}" data-path="${basePath}">${liveStatus}</span> 
+                        </div> 
+                        <button class="play-button" data-endpoint="${api.path}" data-api="${api.name}" data-desc="${api.desc}"> 
+                            <i class="fa-solid fa-play"></i> Try it now 
+                        </button> 
+                    `; 
+                    apiList.appendChild(card); 
                 }); 
             }
 
-            // --- Notification Function ---
-            let notificationTimeout;
-            function showNotification(message, type = 'info') {
-                const notification = document.getElementById('notification');
-                if (!notification) return;
-                clearTimeout(notificationTimeout);
-                notification.textContent = message;
-                notification.className = 'notification'; // Reset class
-                if (type) notification.classList.add(type); // Add type class
-                notification.classList.add('show');
-                notificationTimeout = setTimeout(() => { notification.classList.remove('show'); }, 3000);
-            }
-
-            // [MODIFIKASI 5] Logika Modal Lapor/Request
-            const reportModal = document.getElementById("reportModal");
-            const reportForm = document.getElementById("reportForm");
-            const reportModalTitle = document.getElementById("reportModalTitle");
-            const reportTypeInput = document.getElementById("reportType");
-            const reportLoading = document.getElementById("reportLoading");
-            
-            // ===================================================================
-            // PENTING: GANTI "USERNAME_NGL_KAMU" DENGAN USERNAME NGL ANDA
-            // ===================================================================
-            const NGL_USERNAME = "rikishop"; // <-- GANTI DI SINI
-            // ===================================================================
-
-            document.querySelector(".products-section").addEventListener("click", (e) => {
-                const reportBtn = e.target.closest("button[data-report-type]");
-                if (reportBtn) {
-                    const type = reportBtn.dataset.reportType;
-                    reportModalTitle.textContent = type;
-                    reportTypeInput.value = type;
-                    reportForm.style.display = "block";
-                    reportLoading.style.display = "none";
-                    reportModal.classList.add("active");
-                }
-            });
-
-            // Tombol close modal lapor
-            document.querySelector("[data-close-modal='reportModal']").addEventListener("click", () => {
-                reportModal.classList.remove("active");
-            });
-            reportModal.addEventListener("click", (e) => {
-                if (e.target === reportModal) reportModal.classList.remove("active");
-            });
-
-            // Submit form laporan
-            reportForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                reportForm.style.display = "none";
-                reportLoading.style.display = "block";
-                
-                let userIp = "Tidak Dikenali";
-                try {
-                    // 1. Ambil IP dari endpoint /api/get-ip
-                    const ipRes = await fetch('/api/get-ip');
-                    if (ipRes.ok) {
-                        const ipData = await ipRes.json();
-                        userIp = ipData.ip || "Tidak Dikenali";
-                    }
-                } catch (ipError) {
-                    console.warn("Gagal mengambil IP:", ipError);
-                }
-
-                const reportType = reportTypeInput.value;
-                const reportName = document.getElementById("reportName").value;
-                const reportText = document.getElementById("reportText").value;
-                
-                // 2. Format pesan "estetik"
-                const formattedMessage = `
-✨ **${reportType} Baru** ✨
----------------------------------
-👤 **Dari:** ${reportName}
-💻 **IP:** ${userIp}
----------------------------------
-📝 **Pesan:**
-${reportText}
----------------------------------
-`;
-
-                // 3. Kirim ke NGL
-                const nglUrl = `https://ngl.link/${NGL_USERNAME}`;
-                try {
-                    await fetch(nglUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams({
-                            'question': formattedMessage,
-                            'deviceId': 'web-client' // Parameter standar NGL
-                        })
-                    });
-                    
-                    showNotification('Laporan berhasil terkirim!', 'success');
-                    reportModal.classList.remove("active");
-                } catch (nglError) {
-                    console.error("Gagal kirim ke NGL:", nglError);
-                    showNotification('Gagal mengirim laporan.', 'error');
-                } finally {
-                    reportForm.style.display = "block";
-                    reportLoading.style.display = "none";
-                    reportForm.reset();
-                }
-            });
-
-
-            // Main Click Listener (untuk tombol "Try it now")
+            // Main Click Listener
             document.addEventListener("click", (e) => {
               // Play Button Click
               if (e.target.closest(".play-button") && !e.target.closest("#donationModal") && !e.target.closest(".products-section")) {
                 const btn = e.target.closest(".play-button"); const endpointPathFromSettings = btn.getAttribute("data-endpoint"); const api = btn.getAttribute("data-api"); const desc = btn.getAttribute("data-desc"); const paramForm = document.getElementById("paramForm"); const submitBtn = document.getElementById("submitParamBtn"); const modal = document.getElementById("apiResponseModal"); const copyResponseButton = document.getElementById("copyResponseBtn");
-                document.getElementById("apiResponseContent").innerHTML = ""; // [MODIF 2] Ganti ke innerHTML
-                document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "none"; paramForm.innerHTML = ""; submitBtn.style.display = "none"; copyResponseButton.classList.add("d-none");
+                document.getElementById("apiResponseContent").textContent = ""; document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "none"; paramForm.innerHTML = ""; submitBtn.style.display = "none"; copyResponseButton.classList.add("d-none");
                 currentEndpointPath = endpointPathFromSettings;
                 currentEndpointRequiresApiKey = endpointPathFromSettings.includes("apikey=");
                 document.querySelector("#apiResponseModal .modal-dialog h5").innerText = api; document.querySelector("#apiResponseModal .modal-dialog span").innerText = desc; const copySection = document.querySelector("#apiResponseModal .copy-section"); const copyTextElement = document.getElementById("copyEndpointText"); let displayEndpointForCopy = endpointPathFromSettings.split('?')[0]; const hasQueryParams = endpointPathFromSettings.includes("?"); const copyParams = [];
                 if (hasQueryParams) { const queryParams = endpointPathFromSettings.split("?")[1].split("&"); queryParams.forEach(param => { const [key, value] = param.split("="); if (key.toLowerCase() === 'apikey') { paramForm.innerHTML += `<label for="apikey">Apikey</label><input type="text" id="apikey" name="apikey" value="${value || ""}" placeholder="Enter your API key..." required />`; } else { paramForm.innerHTML += `<label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label><input type="text" id="${key}" name="${key}" value="${value || ""}" placeholder="Enter ${key}..." required />`; copyParams.push(`${key}=`); } }); if (copyParams.length > 0) { displayEndpointForCopy += "?" + copyParams.join('&'); } if (currentEndpointRequiresApiKey) { displayEndpointForCopy += (copyParams.length > 0 ? '&' : '?') + 'apikey='; } if (paramForm.innerHTML !== "") { submitBtn.style.display = "block"; } } else { fetchAPI(currentEndpointPath); }
                 if (paramForm.innerHTML !== "") { copyTextElement.innerText = window.location.origin + displayEndpointForCopy; copySection.classList.add("active"); modal.classList.add("active"); } else { copySection.classList.remove("active"); }
               }
-              // Copy URL Button Click
-              if (e.target.closest(".copy-button") && !e.target.closest("#copyResponseBtn")) { const textToCopy = document.getElementById("copyEndpointText").innerText; navigator.clipboard.writeText(textToCopy).then(() => { const copyBtn = e.target.closest(".copy-button"); copyBtn.innerHTML = '<i class="fas fa-check"></i> URL Copied!'; setTimeout(() => { copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy URL'; }, 2000); }); }
+              
+              // **PERBAIKAN: Copy URL Button Click**
+              if (e.target.closest(".copy-button") && !e.target.closest("#copyResponseBtn")) { 
+                  const copyBtn = e.target.closest(".copy-button");
+                  const textToCopy = document.getElementById("copyEndpointText").innerText;
+                  copyToClipboard(textToCopy, copyBtn, "URL Copied!", true); // true = isCopyUrl
+              }
             });
 
             // Submit Parameters Function
@@ -828,9 +797,7 @@ ${reportText}
                 const apikeyInput = form.querySelector('#apikey');
                 if (currentEndpointRequiresApiKey && apikeyInput && !apikeyInput.value.trim()) { showNotification("API Key wajib diisi!", 'error'); return; }
                 if (form.innerHTML !== "" && !form.checkValidity()) { form.reportValidity(); return; }
-                form.style.display = "none"; document.getElementById("submitParamBtn").style.display = "none"; 
-                document.getElementById("apiResponseContent").innerHTML = ""; // [MODIF 2] Ganti ke innerHTML
-                document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("copyResponseBtn").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "block"; const inputs = document.querySelectorAll("#paramForm input"); const query = Array.from(inputs).map(input => `${input.name}=${encodeURIComponent(input.value)}`); const pathWithoutParams = currentEndpointPath.split("?")[0]; const finalURL = `${pathWithoutParams}${query.length > 0 ? '?' + query.join("&") : ''}`; console.log("Fetching URL:", finalURL); fetchAPI(finalURL);
+                form.style.display = "none"; document.getElementById("submitParamBtn").style.display = "none"; document.getElementById("apiResponseContent").textContent = ""; document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("copyResponseBtn").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "block"; const inputs = document.querySelectorAll("#paramForm input"); const query = Array.from(inputs).map(input => `${input.name}=${encodeURIComponent(input.value)}`); const pathWithoutParams = currentEndpointPath.split("?")[0]; const finalURL = `${pathWithoutParams}${query.length > 0 ? '?' + query.join("&") : ''}`; console.log("Fetching URL:", finalURL); fetchAPI(finalURL);
             }
             document.getElementById("submitParamBtn").addEventListener("click", submitParams);
 
@@ -845,21 +812,11 @@ ${reportText}
                     loadingEl.style.display = "none"; let hasContentToCopy = false; const contentType = res.headers.get("content-type");
                     if (!res.ok) { let errorBody = `HTTP error! Status: ${res.status}`; try { const errorText = await res.text(); try { const errorJson = JSON.parse(errorText); errorBody = JSON.stringify(errorJson, null, 2); } catch (e) { errorBody = errorText; } } catch (e) {} throw new Error(errorBody); }
                     if (contentType && contentType.includes("application/json")) { const data = await res.json(); 
-                        responseEl.innerHTML = syntaxHighlight(data); // [MODIFIKASI 2]
+                        responseEl.innerHTML = highlightJSON(data); // REQ 2: Gunakan highlighter
                         hasContentToCopy = true; 
-                    } else if (contentType && contentType.startsWith("image/")) { const blob = await res.blob(); const imgUrl = URL.createObjectURL(blob); 
-                        responseEl.innerHTML = `<img src="${imgUrl}" alt="API Response" style="max-width: 100%; max-height: 300px; border-radius: 4px;" />`; 
-                        hasContentToCopy = true; 
-                    } else { try { const text = await res.text(); try { const jsonData = JSON.parse(text); 
-                        responseEl.innerHTML = syntaxHighlight(jsonData); // [MODIFIKASI 2]
-                        hasContentToCopy = true; 
-                    } catch (jsonError) { 
-                        responseEl.textContent = text.substring(0, 1000); 
-                        if(text.trim()) hasContentToCopy = true; 
-                    } } catch (textError) { 
-                        responseEl.textContent = "Error fetching response text: " + textError.message; 
-                        hasContentToCopy = true; 
-                    } } responseEl.classList.remove("d-none"); if(hasContentToCopy) { copyResponseButton.classList.remove("d-none"); copyResponseButton.innerHTML = '<i class="far fa-copy"></i> Copy Response'; }
+                    } else if (contentType && contentType.startsWith("image/")) { const blob = await res.blob(); const imgUrl = URL.createObjectURL(blob); responseEl.innerHTML = `<img src="${imgUrl}" alt="API Response" style="max-width: 100%; max-height: 300px; border-radius: 4px;" />`; hasContentToCopy = true; } else { try { const text = await res.text(); try { const jsonData = JSON.parse(text); 
+                        responseEl.innerHTML = highlightJSON(jsonData); // REQ 2: Gunakan highlighter
+                        hasContentToCopy = true; } catch (jsonError) { responseEl.textContent = text.substring(0, 1000); if(text.trim()) hasContentToCopy = true; } } catch (textError) { responseEl.textContent = "Error fetching response text: " + textError.message; hasContentToCopy = true; } } responseEl.classList.remove("d-none"); if(hasContentToCopy) { copyResponseButton.classList.remove("d-none"); copyResponseButton.innerHTML = '<i class="far fa-copy"></i> Copy Response'; }
                 })
                 .catch(err => {
                     loadingEl.style.display = "none"; responseEl.classList.remove("d-none");
@@ -872,9 +829,7 @@ ${reportText}
             }
 
             // Close Modal Logic
-            const closeBtn = document.getElementById("btn-close"); if (closeBtn) { closeBtn.addEventListener("click", () => { const modal = document.getElementById("apiResponseModal"); const urlsSection = document.querySelector("#apiResponseModal .copy-section"); const copyResponseButton = document.getElementById("copyResponseBtn"); modal.classList.remove("active"); document.getElementById("apiResponseContent").classList.add("d-none"); 
-                document.getElementById("apiResponseContent").innerHTML = ""; // [MODIF 2]
-                document.getElementById("paramForm").style.display = "block"; document.getElementById("submitParamBtn").style.display = "none"; urlsSection.classList.remove("active"); copyResponseButton.classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "none"; }); }
+            const closeBtn = document.getElementById("btn-close"); if (closeBtn) { closeBtn.addEventListener("click", () => { const modal = document.getElementById("apiResponseModal"); const urlsSection = document.querySelector("#apiResponseModal .copy-section"); const copyResponseButton = document.getElementById("copyResponseBtn"); modal.classList.remove("active"); document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("apiResponseContent").textContent = ""; document.getElementById("paramForm").style.display = "block"; document.getElementById("submitParamBtn").style.display = "none"; urlsSection.classList.remove("active"); copyResponseButton.classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "none"; }); }
 
             // Tab Switching Logic
             tabsContainer.addEventListener("click", (e) => { if (e.target.classList.contains("tab")) { document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active")); e.target.classList.add("active"); renderAPIs(e.target.dataset.tab); } });
@@ -882,21 +837,101 @@ ${reportText}
             // Close Modal on Outside Click
             document.getElementById("apiResponseModal").addEventListener("click", (e) => { if (e.target === document.getElementById("apiResponseModal")) { closeBtn.click(); } });
 
-            // Copy Response Button Listener
-            const copyResponseButton = document.getElementById("copyResponseBtn"); if (copyResponseButton) { copyResponseButton.addEventListener("click", () => { const responseElement = document.getElementById("apiResponseContent"); let textToCopy = ""; let feedbackText = "Response Copied!"; const imgElement = responseElement.querySelector('img'); if (imgElement) { textToCopy = imgElement.src; feedbackText = "Image URL Copied!"; } else { 
-                // [MODIF 2] Salin teks asli, bukan HTML yang sudah di-highlight
+            // **PERBAIKAN: Copy Response Button Listener**
+            const copyResponseButton = document.getElementById("copyResponseBtn"); 
+            if (copyResponseButton) { 
+                copyResponseButton.addEventListener("click", () => {
+                    const responseElement = document.getElementById("apiResponseContent");
+                    let textToCopy = "";
+                    let feedbackText = "Response Copied!";
+                    const imgElement = responseElement.querySelector('img');
+                    
+                    if (imgElement) {
+                        textToCopy = imgElement.src;
+                        feedbackText = "Image URL Copied!";
+                    } else {
+                        textToCopy = responseElement.textContent; // .textContent mengambil teks mentah
+                    }
+                    
+                    if (textToCopy) {
+                        copyToClipboard(textToCopy, copyResponseButton, feedbackText, false); // false = not CopyUrl
+                    }
+                }); 
+            }
+
+            // --- REQ 5: Report Modal Logic ---
+            const reportModal = document.getElementById("reportModal");
+            const reportForm = document.getElementById("reportForm");
+            
+            function openReportModal(type) {
+                document.getElementById("reportModalTitle").textContent = type;
+                document.getElementById("reportType").value = type;
+                reportForm.reset();
+                reportModal.classList.add("active");
+            }
+
+            document.getElementById("reportErrorBtn").addEventListener("click", () => openReportModal("Lapor Error"));
+            document.getElementById("requestFeatureBtn").addEventListener("click", () => openReportModal("Request Fitur"));
+
+            document.querySelectorAll(".report-close").forEach(btn => btn.addEventListener("click", () => reportModal.classList.remove("active")));
+            reportModal.addEventListener("click", (e) => { if (e.target === reportModal) reportModal.classList.remove("active"); });
+
+            // **PERBAIKAN: Submit Laporan NGL**
+            reportForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                
+                const reportType = document.getElementById("reportType").value;
+                const reportName = document.getElementById("reportName").value;
+                const reportText = document.getElementById("reportText").value;
+                const submitBtn = document.getElementById("submitReportBtn");
+                
+                // Format estetik
+                const formattedMessage = `
+===== ${reportType} =====
+👤 Nama: ${reportName}
+📝 Teks: ${reportText}
+======================
+`.trim();
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
+                
+                // **PERBAIKAN: Gunakan API proxy Anda dengan method GET**
+                // Kita tambahkan parameter 'text' (atau 'question', sesuaikan dengan API deline Anda)
+                const finalNglUrl = `${nglProxyUrl}&text=${encodeURIComponent(formattedMessage)}`;
+                
                 try {
-                    // Coba parse innerHTML sebagai JSON mentah
-                    const jsonData = JSON.parse(responseElement.textContent);
-                    textToCopy = JSON.stringify(jsonData, null, 2);
-                } catch(e) {
-                    // Jika gagal (bukan JSON), salin teks apa adanya
-                    textToCopy = responseElement.textContent;
+                    // Coba kirim ke NGL via proxy
+                    const response = await fetch(finalNglUrl, {
+                        method: 'GET' // Ganti ke GET
+                    });
+                    
+                    if (!response.ok) {
+                        // Cek jika proxy Anda mengembalikan error
+                         throw new Error(`Gagal mengirim. Status: ${response.status}`);
+                    }
+                    
+                    // Coba baca respons (opsional, tapi bagus untuk debug)
+                    const responseData = await response.json();
+                    console.log("NGL Proxy Response:", responseData);
+
+                    showNotification("Laporan berhasil terkirim!", 'success');
+                    reportModal.classList.remove("active");
+
+                } catch (error) {
+                    console.error("NGL Submit Error:", error);
+                    showNotification("Gagal mengirim laporan. Cek konsol.", 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Laporan';
                 }
-            } if (textToCopy) { navigator.clipboard.writeText(textToCopy) .then(() => { copyResponseButton.innerHTML = `<i class="fas fa-check"></i> ${feedbackText}`; setTimeout(() => { copyResponseButton.innerHTML = '<i class="far fa-copy"></i> Copy Response'; }, 2000); showNotification(feedbackText, 'success'); }) .catch(err => { console.error("Failed to copy response: ", err); copyResponseButton.innerHTML = '<i class="fas fa-times"></i> Copy Failed'; setTimeout(() => { copyResponseButton.innerHTML = '<i class="far fa-copy"></i> Copy Response'; }, 2000); showNotification("Gagal menyalin!", 'error'); }); } }); }
+            });
 
             // Initial Render
             renderAPIs(Object.keys(apis)[0]);
+            
+            // REQ 6: Start polling status
+            startStatusPolling();
         }
 
         // Load settings when DOM is ready
