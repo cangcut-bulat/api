@@ -1,4 +1,3 @@
-
 const express = require('express');
 const chalk = require('chalk');
 const fs = require('fs');
@@ -16,7 +15,7 @@ const app = express();
 const PORT = process.env.SERVER_PORT || process.env.PORT || 8000;
 console.log(`LOG: Port yang akan digunakan: ${PORT}`); // <-- Log 3 (Cek port Pterodactyl)
 
-app.enable("trust proxy");
+app.enable("trust proxy"); // Penting untuk mendapatkan IP yang benar
 app.set("json spaces", 2);
 
 // Middleware
@@ -111,6 +110,19 @@ try { // Tambahkan try-catch di sekitar pemuatan rute
     console.error(chalk.red(`FATAL ERROR: Gagal membaca folder src atau subfolder: ${readDirError.message}`));
     process.exit(1); // Hentikan jika gagal baca direktori
 }
+
+// ==========================================================
+// [MODIFIKASI 5] Endpoint baru untuk mendapatkan IP
+// ==========================================================
+app.get('/api/get-ip', (req, res) => {
+  // app.enable("trust proxy") sudah diatur di atas
+  const ip = req.ip || req.headers['x-forwarded-for']?.split(',')[0].trim() || req.connection.remoteAddress;
+  res.json({
+    status: true,
+    ip: ip
+  });
+});
+console.log("LOG: Rute /api/get-ip (untuk lapor error) dimuat."); // <-- Log Tambahan
 
 
 // Default home page
