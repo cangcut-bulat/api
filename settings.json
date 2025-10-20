@@ -5,7 +5,6 @@
   "youtube": "https://youtube.com/@rikishopreal",
   "apititle": "Rikishopreal Api",
   "pagetitle": "Rikishopreal Api",
-  "publicAddress": "rikishop.panelvripate.my.id", 
   "apikey": [
     "rikinew"
   ], 
@@ -333,68 +332,7 @@
         "desc": "Teka-teki atau tebak-tebakan acak",
         "status": "Active",
         "path": "/games/tebaktebakan?apikey="
-      },
-       {
-         "name": "Tebak Hewan",
-         "desc": "Kuis tebak hewan acak",
-         "status": "Active",
-         "path": "/games/tebakhewan?apikey="
-       },
-       {
-         "name": "Tebak JKT48",
-         "desc": "Kuis tebak member JKT48 acak",
-         "status": "Active",
-         "path": "/games/tebakjkt?apikey="
-       },
-       {
-         "name": "Tebak Kabupaten",
-         "desc": "Kuis tebak kabupaten di Indonesia",
-         "status": "Active",
-         "path": "/games/kabupaten?apikey="
-       },
-       {
-         "name": "Tebak Kalimat",
-         "desc": "Kuis tebak kalimat acak",
-         "status": "Active",
-         "path": "/games/tebakkalimat?apikey="
-       },
-       {
-         "name": "Tebak Karakter FF",
-         "desc": "Kuis tebak karakter Free Fire",
-         "status": "Active",
-         "path": "/games/karakter-freefire?apikey="
-       },
-       {
-         "name": "Tebak Kartun",
-         "desc": "Kuis tebak judul kartun",
-         "status": "Active",
-         "path": "/games/tebakkartun?apikey="
-       },
-       {
-         "name": "Tebak Kata",
-         "desc": "Kuis tebak kata acak",
-         "status": "Active",
-         "path": "/games/tebakkata?apikey="
-       },
-       {
-         "name": "Tebak Kimia",
-         "desc": "Kuis tebak kimia acak",
-         "status": "Active",
-         "path": "/games/tebakkimia?apikey="
-       },
-       {
-         "name": "Tebak Hero ML",
-         "desc": "Kuis tebak hero Mobile Legends",
-         "status": "Active",
-         "path": "/games/tebakheroml?apikey="
-       },
-      {
-        "name": "Tebak Tebakan",
-        "desc": "Teka-teki atau tebak-tebakan acak",
-        "status": "Active",
-        "path": "/games/tebaktebakan?apikey="
       }
-    ],
     ],
 
   "api": [
