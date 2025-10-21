@@ -1,3 +1,4 @@
+
 const express = require('express');
 const chalk = require('chalk');
 const fs = require('fs');
@@ -89,6 +90,92 @@ app.use((req, res, next) => {
   next();
 });
 console.log("LOG: Middleware response JSON dimuat."); // <-- Log 9
+
+console.log("LOG: Memuat middleware API Key global (SMART VERSION)..."); // <-- Log 9.5
+app.use((req, res, next) => {
+  const reqPath = req.path; // e.g., /ai/deepseek
+  const providedApiKey = req.query.apikey;
+
+  // 1. Abaikan pengecekan untuk halaman/file publik (aset statis)
+  const isPublicAsset = reqPath === '/' || 
+                        reqPath === '/api/endpoint-status' || 
+                        reqPath.startsWith('/images/') || 
+                        reqPath.startsWith('/audio/') ||
+                        req.path.endsWith('.html') || 
+                        req.path.endsWith('.css') || 
+                        req.path.endsWith('.js') || 
+                        req.path.endsWith('.png');
+
+  if (isPublicAsset) {
+    return next();
+  }
+
+  // 2. Cari definisi endpoint di settings.json
+  let endpointDef = null;
+  let endpointNeedsKey = false;
+  
+  for (const category in global.settings.endpoints) {
+    const endpoints = global.settings.endpoints[category];
+    if (Array.isArray(endpoints)) {
+      // Cari endpoint yang path-nya cocok (abaikan query string)
+      const found = endpoints.find(e => e.path && reqPath === e.path.split('?')[0]);
+      if (found) {
+        endpointDef = found;
+        break;
+      }
+    }
+  }
+
+  // 3. Jika endpoint terdaftar di settings.json
+  if (endpointDef) {
+    // Cek apakah path-nya mengandung "apikey="
+    if (endpointDef.path.includes("apikey=")) {
+      endpointNeedsKey = true;
+    }
+
+    // 4. Jika endpoint ini WAJIB pakai apikey (PRIVAT)
+    if (endpointNeedsKey) {
+      if (!providedApiKey) {
+        return res.status(401).json({
+          status: false,
+          error: "Apikey parameter is missing for this endpoint."
+        });
+      }
+      
+      if (global.apikey.includes(providedApiKey)) {
+        return next(); // API Key valid, lanjutkan
+      } else {
+        return res.status(403).json({
+          status: false,
+          error: "Apikey invalid."
+        });
+      }
+    } else {
+      // 5. Endpoint ini PUBLIK (spt /ai/deepseek)
+      
+      // --- INI BAGIAN PINTARNYA ---
+      // Jika user TIDAK menyediakan API key, kita suntikkan satu yang valid
+      // agar lolos dari validasi di file src/
+      if (!providedApiKey && global.apikey && global.apikey.length > 0) {
+        // Suntikkan apikey valid pertama dari settings
+        req.query.apikey = global.apikey[0]; 
+        console.log(chalk.yellow(`LOG: Menyuntikkan API key untuk route publik: ${reqPath}`));
+      }
+      // Jika user *tetap* memberikan apikey (walau tidak wajib), biarkan saja
+      // Kode di src/ akan memvalidasinya. Jika valid, lolos. Jika tidak, ya error.
+      // --- AKHIR BAGIAN PINTAR ---
+      
+      return next(); // Lanjutkan ke file di src/
+    }
+    
+  } else {
+    // 6. Jika endpoint diakses tapi tidak ada di settings.json
+    // Biarkan 404 handler yang menangani
+    return next();
+  }
+});
+console.log("LOG: Middleware API Key global (SMART VERSION) dimuat.");
+// --- AKHIR KODE BARU ---
 
 // Load dynamic routes
 let totalRoutes = 0;
