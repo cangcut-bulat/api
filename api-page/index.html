@@ -772,16 +772,84 @@
 
             // Main Click Listener
             document.addEventListener("click", (e) => {
+              
+              // --- MULAI KODE YANG DIPERBAIKI (1/2) ---
               // Play Button Click
               if (e.target.closest(".play-button") && !e.target.closest("#donationModal") && !e.target.closest(".products-section")) {
-                const btn = e.target.closest(".play-button"); const endpointPathFromSettings = btn.getAttribute("data-endpoint"); const api = btn.getAttribute("data-api"); const desc = btn.getAttribute("data-desc"); const paramForm = document.getElementById("paramForm"); const submitBtn = document.getElementById("submitParamBtn"); const modal = document.getElementById("apiResponseModal"); const copyResponseButton = document.getElementById("copyResponseBtn");
-                document.getElementById("apiResponseContent").textContent = ""; document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "none"; paramForm.innerHTML = ""; submitBtn.style.display = "none"; copyResponseButton.classList.add("d-none");
+                const btn = e.target.closest(".play-button");
+                const endpointPathFromSettings = btn.getAttribute("data-endpoint");
+                const api = btn.getAttribute("data-api");
+                const desc = btn.getAttribute("data-desc");
+                const paramForm = document.getElementById("paramForm");
+                const submitBtn = document.getElementById("submitParamBtn");
+                const modal = document.getElementById("apiResponseModal");
+                const copyResponseButton = document.getElementById("copyResponseBtn");
+
+                // 1. Reset Modal
+                document.getElementById("apiResponseContent").textContent = "";
+                document.getElementById("apiResponseContent").classList.add("d-none");
+                document.getElementById("apiResponseLoading").style.display = "none";
+                paramForm.innerHTML = "";
+                submitBtn.style.display = "none"; // Sembunyikan tombol submit dulu
+                copyResponseButton.classList.add("d-none");
+                paramForm.style.display = "block"; // Pastikan form terlihat saat modal baru dibuka
+
+                // 2. Set Info Dasar
                 currentEndpointPath = endpointPathFromSettings;
                 currentEndpointRequiresApiKey = endpointPathFromSettings.includes("apikey=");
-                document.querySelector("#apiResponseModal .modal-dialog h5").innerText = api; document.querySelector("#apiResponseModal .modal-dialog span").innerText = desc; const copySection = document.querySelector("#apiResponseModal .copy-section"); const copyTextElement = document.getElementById("copyEndpointText"); let displayEndpointForCopy = endpointPathFromSettings.split('?')[0]; const hasQueryParams = endpointPathFromSettings.includes("?"); const copyParams = [];
-                if (hasQueryParams) { const queryParams = endpointPathFromSettings.split("?")[1].split("&"); queryParams.forEach(param => { const [key, value] = param.split("="); if (key.toLowerCase() === 'apikey') { paramForm.innerHTML += `<label for="apikey">Apikey</label><input type="text" id="apikey" name="apikey" value="${value || ""}" placeholder="Enter your API key..." required />`; } else { paramForm.innerHTML += `<label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label><input type="text" id="${key}" name="${key}" value="${value || ""}" placeholder="Enter ${key}..." required />`; copyParams.push(`${key}=`); } }); if (copyParams.length > 0) { displayEndpointForCopy += "?" + copyParams.join('&'); } if (currentEndpointRequiresApiKey) { displayEndpointForCopy += (copyParams.length > 0 ? '&' : '?') + 'apikey='; } if (paramForm.innerHTML !== "") { submitBtn.style.display = "block"; } } else { fetchAPI(currentEndpointPath); }
-                if (paramForm.innerHTML !== "") { copyTextElement.innerText = window.location.origin + displayEndpointForCopy; copySection.classList.add("active"); modal.classList.add("active"); } else { copySection.classList.remove("active"); }
+                document.querySelector("#apiResponseModal .modal-dialog h5").innerText = api;
+                document.querySelector("#apiResponseModal .modal-dialog span").innerText = desc;
+                
+                const copySection = document.querySelector("#apiResponseModal .copy-section");
+                const copyTextElement = document.getElementById("copyEndpointText");
+                
+                // 3. --- LOGIKA BARU YANG "PINTAR" ---
+                let displayEndpointForCopy = endpointPathFromSettings.split('?')[0];
+                const hasQueryParams = endpointPathFromSettings.includes("?");
+                const copyParams = []; 
+                let hasApiKeyParamInSetting = false;
+
+                if (hasQueryParams) {
+                    // 3a. Jika ADA parameter (seperti Deepseek)
+                    const queryParams = endpointPathFromSettings.split("?")[1].split("&");
+                    queryParams.forEach(param => {
+                        const [key, value] = param.split("=");
+                        if (key.toLowerCase() === 'apikey') {
+                            hasApiKeyParamInSetting = true;
+                            paramForm.innerHTML += `<label for="apikey">Apikey</label><input type="text" id="apikey" name="apikey" value="${value || ""}" placeholder="Enter your API key..." required />`;
+                        } else {
+                            paramForm.innerHTML += `<label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label><input type="text" id="${key}" name="${key}" value="${value || ""}" placeholder="Enter ${key}..." required />`;
+                            copyParams.push(`${key}=`);
+                        }
+                    });
+                    
+                    if (paramForm.innerHTML !== "") {
+                        submitBtn.textContent = "Submit Request"; // Ganti teks tombol
+                        submitBtn.style.display = "block"; // Tampilkan tombol
+                    }
+                } else {
+                    // 3b. Jika TIDAK ADA parameter (seperti Cak Lontong)
+                    // JANGAN fetch API, tapi tampilkan tombol "Try it now"
+                    submitBtn.textContent = "Try it now"; // Ganti teks tombol
+                    submitBtn.style.display = "block"; // Tampilkan tombol
+                }
+
+                // 4. SELALU Tampilkan URL dan Modal
+                if (copyParams.length > 0) {
+                    displayEndpointForCopy += "?" + copyParams.join('&');
+                }
+                
+                // Perbaikan: Tambahkan 'apikey=' ke URL display HANYA jika diperlukan
+                if (currentEndpointRequiresApiKey && !hasApiKeyParamInSetting) {
+                   displayEndpointForCopy += (copyParams.length > 0 ? '&' : '?') + 'apikey=';
+                }
+
+                // Selalu tampilkan copy section dan modal
+                copyTextElement.innerText = window.location.origin + displayEndpointForCopy;
+                copySection.classList.add("active");
+                modal.classList.add("active");
               }
+              // --- AKHIR KODE YANG DIPERBAIKI (1/2) ---
               
               // **PERBAIKAN: Copy URL Button Click**
               if (e.target.closest(".copy-button") && !e.target.closest("#copyResponseBtn")) { 
@@ -791,14 +859,53 @@
               }
             });
 
+            // --- MULAI KODE YANG DIPERBAIKI (2/2) ---
             // Submit Parameters Function
             function submitParams() {
                 const form = document.getElementById("paramForm");
                 const apikeyInput = form.querySelector('#apikey');
-                if (currentEndpointRequiresApiKey && apikeyInput && !apikeyInput.value.trim()) { showNotification("API Key wajib diisi!", 'error'); return; }
-                if (form.innerHTML !== "" && !form.checkValidity()) { form.reportValidity(); return; }
-                form.style.display = "none"; document.getElementById("submitParamBtn").style.display = "none"; document.getElementById("apiResponseContent").textContent = ""; document.getElementById("apiResponseContent").classList.add("d-none"); document.getElementById("copyResponseBtn").classList.add("d-none"); document.getElementById("apiResponseLoading").style.display = "block"; const inputs = document.querySelectorAll("#paramForm input"); const query = Array.from(inputs).map(input => `${input.name}=${encodeURIComponent(input.value)}`); const pathWithoutParams = currentEndpointPath.split("?")[0]; const finalURL = `${pathWithoutParams}${query.length > 0 ? '?' + query.join("&") : ''}`; console.log("Fetching URL:", finalURL); fetchAPI(finalURL);
+
+                // Cek apikey jika memang diwajibkan (dan inputnya ada)
+                if (currentEndpointRequiresApiKey && apikeyInput && !apikeyInput.value.trim()) { 
+                    showNotification("API Key wajib diisi!", 'error'); 
+                    return; 
+                }
+                
+                // Hanya validasi form jika form-nya ADA isinya (tidak kosong)
+                if (form.innerHTML.trim() !== "" && !form.checkValidity()) { 
+                    form.reportValidity(); 
+                    return; 
+                }
+                
+                // Sembunyikan form, tampilkan loading
+                form.style.display = "none"; 
+                document.getElementById("submitParamBtn").style.display = "none"; 
+                document.getElementById("apiResponseContent").textContent = ""; 
+                document.getElementById("apiResponseContent").classList.add("d-none"); 
+                document.getElementById("copyResponseBtn").classList.add("d-none"); 
+                document.getElementById("apiResponseLoading").style.display = "block"; 
+                
+                let finalURLToFetch;
+                
+                // --- INI LOGIKA BARU YANG "PINTAR" ---
+                // Cek apakah form punya input (tidak kosong)
+                if (form.innerHTML.trim() !== "") {
+                    // Jika YA (spt Deepseek), buat URL dari input form
+                    const inputs = document.querySelectorAll("#paramForm input");
+                    const query = Array.from(inputs).map(input => `${input.name}=${encodeURIComponent(input.value)}`);
+                    const pathWithoutParams = currentEndpointPath.split("?")[0];
+                    finalURLToFetch = `${pathWithoutParams}${query.length > 0 ? '?' + query.join("&") : ''}`;
+                } else {
+                    // Jika TIDAK (spt Cak Lontong), gunakan path asli
+                    finalURLToFetch = currentEndpointPath;
+                }
+                // --- AKHIR LOGIKA BARU ---
+
+                console.log("Fetching URL:", finalURLToFetch); 
+                fetchAPI(finalURLToFetch);
             }
+            // --- AKHIR KODE YANG DIPERBAIKI (2/2) ---
+            
             document.getElementById("submitParamBtn").addEventListener("click", submitParams);
 
             // Fetch API Function
